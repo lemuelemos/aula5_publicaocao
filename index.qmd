@@ -1,44 +1,73 @@
 ---
-title: "Página Teste"
-format: html
+title: "Diamonds Explorer"
+format:
+  html:
+    page-layout: full
+    code-tools: 
+      source: https://github.com/quarto-dev/quarto-web/blob/main/docs/interactive/shiny/_examples/diamonds/shiny-diamonds.qmd 
+server: shiny
 ---
 
-## Bem-vindo
-
-Esta é uma página web criada com **Quarto**, pensada para servir como base de um site simples, elegante e facilmente expansível.
-
-O Quarto permite integrar texto, código, tabelas e gráficos de forma reprodutível, sendo ideal para relatórios técnicos, páginas institucionais e projetos de dados.
-
-## Sobre o projeto
-
-O objetivo desta página é demonstrar uma estrutura básica de site, com seções bem definidas, navegação lateral e um visual limpo. A partir daqui, você pode evoluir para um site completo com múltiplas páginas.
-
-## Exemplo de código em R
-
 ```{r}
-# Exemplo simples
-set.seed(123)
-dados <- rnorm(100)
-mean(dados)
+#| context: setup
+library(ggplot2)
+dataset <- diamonds
 ```
 
-## Exemplo de gráfico
-
 ```{r}
-hist(dados, main = "Distribuição dos dados", col = "lightgray", border = "white")
+#| panel: fill
+plotOutput('plot')
 ```
 
-## Próximos passos
+::: {layout-ncol="3"}
+```{r}
+sliderInput('sampleSize', 'Sample Size', 
+            min=1, max=nrow(dataset),
+            value=min(1000, nrow(dataset)), 
+            step=500, round=0)
+br()
+checkboxInput('jitter', 'Jitter')
+checkboxInput('smooth', 'Smooth')
+```
 
-* Criar múltiplas páginas (`index.qmd`, `sobre.qmd`, `contato.qmd`)
-* Adicionar um menu de navegação
-* Customizar o tema com CSS
-* Publicar no GitHub Pages ou Netlify
+```{r}
+selectInput('x', 'X', names(dataset))
+selectInput('y', 'Y', names(dataset), names(dataset)[[2]])
+selectInput('color', 'Color', c('None', names(dataset)))
+```
 
-## Segunda alteração
+```{r}
+selectInput('facet_row', 'Facet Row',
+            c(None='.', names(diamonds[sapply(diamonds, is.factor)])))
+selectInput('facet_col', 'Facet Column',
+            c(None='.', names(diamonds[sapply(diamonds, is.factor)])))
+```
+:::
 
-Teste de segunda alterção.
+```{r}
+#| context: server
 
----
-
-📌 *Esta página foi gerada utilizando Quarto.*
+dataset <- reactive({
+  diamonds[sample(nrow(diamonds), input$sampleSize),]
+})
+ 
+output$plot <- renderPlot({
+  
+  p <- ggplot(dataset(), aes_string(x=input$x, y=input$y)) + geom_point()
+  
+  if (input$color != 'None')
+    p <- p + aes_string(color=input$color)
+  
+  facets <- paste(input$facet_row, '~', input$facet_col)
+  if (facets != '. ~ .')
+    p <- p + facet_grid(facets)
+  
+  if (input$jitter)
+    p <- p + geom_jitter()
+  if (input$smooth)
+    p <- p + geom_smooth()
+  
+  print(p)
+  
+})
+```
