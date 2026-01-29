@@ -35,6 +35,10 @@ hist(dados, main = "Distribuição dos dados", col = "lightgray", border = "whit
 * Customizar o tema com CSS
 * Publicar no GitHub Pages ou Netlify
 
+## Segunda alteração
+
+Teste de segunda alterção.
+
 ---
 
 📌 *Esta página foi gerada utilizando Quarto.*
