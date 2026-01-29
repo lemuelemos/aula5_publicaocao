@@ -1,0 +1,40 @@
+---
+title: "Página Teste"
+format: html
+---
+
+## Bem-vindo
+
+Esta é uma página web criada com **Quarto**, pensada para servir como base de um site simples, elegante e facilmente expansível.
+
+O Quarto permite integrar texto, código, tabelas e gráficos de forma reprodutível, sendo ideal para relatórios técnicos, páginas institucionais e projetos de dados.
+
+## Sobre o projeto
+
+O objetivo desta página é demonstrar uma estrutura básica de site, com seções bem definidas, navegação lateral e um visual limpo. A partir daqui, você pode evoluir para um site completo com múltiplas páginas.
+
+## Exemplo de código em R
+
+```{r}
+# Exemplo simples
+set.seed(123)
+dados <- rnorm(100)
+mean(dados)
+```
+
+## Exemplo de gráfico
+
+```{r}
+hist(dados, main = "Distribuição dos dados", col = "lightgray", border = "white")
+```
+
+## Próximos passos
+
+* Criar múltiplas páginas (`index.qmd`, `sobre.qmd`, `contato.qmd`)
+* Adicionar um menu de navegação
+* Customizar o tema com CSS
+* Publicar no GitHub Pages ou Netlify
+
+---
+
+📌 *Esta página foi gerada utilizando Quarto.*
